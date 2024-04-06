@@ -5,7 +5,7 @@ import { useState, useEffect, useMemo } from 'react';
 import ManagementModal from "./ManagementModal.js"
 
 function Filter(props) {
-  const { ListName,  ShowDoneCallback, OpenManagementCallback, isEditing, ownerFK, updataManagementData, memberList } = props;
+  const { ListName, userList,  ShowDoneCallback, OpenManagementCallback, isEditing, isCurrentUserOwner, updataManagementData, memberList, nonOwnerUsers, leaveListCallback } = props;
   
 
   return (
@@ -22,7 +22,7 @@ function Filter(props) {
       <Button variant="primary" onClick={() => OpenManagementCallback.setter(true)}>
         Launch Management Modal
       </Button>
-      <ManagementModal OpenManagementCallback={OpenManagementCallback} ownerFK={ownerFK} listName={ListName} updataManagementData={updataManagementData} memberList={memberList}/>
+      <ManagementModal OpenManagementCallback={OpenManagementCallback} isCurrentUserOwner={isCurrentUserOwner} listName={ListName} updataManagementData={updataManagementData} memberList={memberList} userList={userList} nonOwnerUsers={nonOwnerUsers} leaveListCallback={leaveListCallback}/>
     </div>
   );
 }

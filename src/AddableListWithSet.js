@@ -7,17 +7,17 @@ import './App.css';
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 
 const AddableListWithSet = forwardRef((props, ref) => {
-  const { itemList, userList, showAddButton, editable, extraButtonsCreator, updateItemListCallback, StartEditingCallback, UpdateCallback, setOnFinishEdditing } = props;
+  const { itemList, showAddButton, editable, extraButtonsCreator, updateItemListCallback, StartEditingCallback, UpdateCallback, setOnFinishEdditing, nonOwnerUsers, userList } = props;
 
   const [list, setList] = useState([]);
   const userOptions = useMemo(() => {
-    const filter = list.filter(val => val.delete !== true).map((val) => val.userId);
-    const selectableData = userList
-      .filter((user) => !filter.includes(user.userId));
+    const filter = list.filter(val => val.delete !== true).map((val) => val.id);
+    const selectableData = nonOwnerUsers
+      .filter((user) => !filter.includes(user.id));
     const userOptions = selectableData
-      .map((data => (<option value={data.userId}>{data.userName}</option>)));
+      .map((data => (<option value={data.id}>{data.name}</option>)));
     return userOptions
-  }, [list, userList]);
+  }, [list, nonOwnerUsers]);
 
   useEffect(() => { setList([...itemList]) }, [itemList])
   
@@ -35,7 +35,7 @@ const AddableListWithSet = forwardRef((props, ref) => {
   };
   const AddItem = (userId) => {
     const newList = [...list]
-    newList.push(userList.filter((item)=> item.userId === userId)[0]);
+    newList.push(nonOwnerUsers.filter((item)=> item.id === userId)[0]);
     setList(newList)
   }
 
@@ -64,14 +64,14 @@ const AddableListWithSet = forwardRef((props, ref) => {
             //format prep time
             return {
               item: item, comp: (
-                <tr key={item.caption}>
+                <tr key={item.id}>
                   <td>{editable ? <Form.Select as="elementType" onChange={(event) => UpdateData(index, parseInt(event.target.value))}>
-                    <option value={item.userId}>{item.userName}</option>
+                    <option value={item.id}>{item.name}</option>
                     {userOptions}
-                  </Form.Select> : item.userName}</td>
+                  </Form.Select> : item.name}</td>
                   <td>{extraButtonsCreator(item, editable, (params) =>
                     UpdateData(index, params))}</td>
-                  <td>{editable && DeleteButton(index)}</td>
+                  <td>{editable && !item.isOwner && DeleteButton(index)}</td>
                 </tr>
               )
             };

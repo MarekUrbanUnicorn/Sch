@@ -5,6 +5,15 @@ import './App.css';
 import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import Button from "react-bootstrap/Button";
+import UserSelector from "./user.js";
+//import { UserProvider, UserSelector, useUser } from "./user.js"
+
+const USERS = [
+  { id: 234, name: "Amelia" },
+  { id: 123, name: "James" },
+  { id: 345, name: "John" },
+  { id: 456, name: "Chloe" }
+];
 
 function Detail() {
   const [showDone, setShowDone] = useState(false);
@@ -35,7 +44,7 @@ function Detail() {
       setDetailData({
         state: "success",
         data: {
-          ownerFK: 1,
+          ownerId: 234,
           listName: "Dave's List",
           itemList: [
             {
@@ -43,7 +52,7 @@ function Detail() {
               done: false
             }
           ],
-          memberList: []
+          memberList: [234]
         }
       })
     };
@@ -71,35 +80,61 @@ function Detail() {
   const updateItemList = (newItemList) => {
 
     newItemList.forEach(newItem => {
-      if(newItem.index !== undefined)
-      {
+      if (newItem.index !== undefined) {
         allItemList[newItem.index] = { ...newItem, index: undefined }
       }
-      else
-      {
+      else {
         allItemList.push(newItem)
       }
     });
     //later add be call
     setDetailData({ ...detailData, data: { ...detailData.data, itemList: allItemList.filter(item => item.delete !== true) } })
   }
-  
+
   const updataManagementData = (newManagementData) => {
     //later add be call
-    setDetailData({ ...detailData, data: { ...detailData.data, memberList: newManagementData.memberList, listName: newManagementData.listName } })
+    setDetailData({ ...detailData, data: { ...detailData.data, memberList: newManagementData.memberList.map(member => member.id), listName: newManagementData.listName } })
   }
 
+  const [currentUser, setUser] = useState(USERS[0]);
+
+  const leaveListCallback = () => {
+    setDetailData({ ...detailData, data: { ...detailData.data, memberList: detailData.data.memberList.filter((id) => id != currentUser.id), } })
+  }
+  const userPos = USERS.map((user, index) => { return { ...user, index } }).filter(user => user.id === currentUser.id).index;
+  const { isCurrentUserOwner, nonOwnerUsers, memberList, isCurentUserMember } = useMemo(() => {
+    if (detailData?.data?.ownerId) {
+      return {
+        isCurentUserMember: detailData.data.memberList.includes(currentUser.id),
+        isCurrentUserOwner: detailData.data.ownerId === currentUser.id,
+        nonOwnerUsers: USERS?.filter(user => user.userId !== detailData.data.ownerId) ?? [],
+        memberList: detailData.data.memberList.map(member => { return { ...USERS.filter(({id}) => id === member)[0], isOwner: detailData.data.ownerId === member } })
+      }
+    }
+    else {
+      return { isCurentUserMember: false, isCurrentUserOwner: false, nonOwnerUsers: [], memberList: [] }
+    }
+  }, [currentUser.id, detailData, detailData.data])
   return (
-    <div>
-      {detailData.state === "success" && <>
+    //<UserProvider>
+    //  <UserSelector/>
+    <>
+      <UserSelector userId={userPos} users={USERS} onChange={(e) =>
+        { 
+          setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])}
+       } />
+      {detailData.state === "success" && isCurentUserMember && <>
         <Filter
           ListName={detailData.data.listName}
           ShowDoneCallback={{ value: showDone, setter: changeShowDone }}
           OpenManagementCallback={{ value: showManagementModal, setter: setShowManagementModal }}
           isEditing={isEditing}
-          ownerFK={detailData.data.ownerFK}
+          isCurrentUserOwner={isCurrentUserOwner}
           updataManagementData={updataManagementData}
-          memberList={detailData.data.memberList}
+          memberList={memberList}
+          leaveListCallback={leaveListCallback}
+          userList={USERS}
+          nonOwnerUsers={nonOwnerUsers}
         />
         <AddableList
           itemList={itemList}
@@ -120,7 +155,13 @@ function Detail() {
           itemCreatorFunction={() => { return { caption: "newItem", done: false } }}
         />
       </>}
-    </div>
+      
+      {detailData.state === "success" && !isCurentUserMember && <div className="noAcess">
+        <h1 className="noAcessItem">No Acess</h1>
+        <p className="noAcessItem">You are not authorised to view this shopping list.</p>
+      </div>}
+    </>
+    //</UserProvider>
   );
 }
 

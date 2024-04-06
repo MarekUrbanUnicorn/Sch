@@ -6,88 +6,29 @@ import Form from "react-bootstrap/Form";
 import AddableListWithSet from './AddableListWithSet.js';
 
 function ManagementModal(props) {
-  const { OpenManagementCallback, ownerFK, listName, updataManagementData, memberList } = props;
+  const { OpenManagementCallback, isCurrentUserOwner, listName, updataManagementData, memberList, nonOwnerUsers, leaveListCallback, userList } = props;
 
-  const [userList, setUserList] = useState([]);
   const [managementData, setManagementData] = useState({ listName, memberList });
 
 
   ///DEBUD use this to change if you are owner
-  const currentUserId = 1
 
 
 
 
-  const { isOwner, nonOwnerUsers } = useMemo(() => {
-    if (ownerFK) {
-      return { isOwner: ownerFK === currentUserId, nonOwnerUsers: userList?.data?.userList?.filter(user => user.userId !== ownerFK) ?? [] }
-    }
-    else {
-      return { isOwner: false, nonOwnerUsers: [] }
-    }
-  }, [userList, currentUserId, ownerFK])
 
   useEffect(() => {
     setManagementData({ listName, memberList })
   }, [listName, memberList])
 
 
-  useEffect(() => {
-    if (false) { //code for creation
-      setUserList({
-        state: "success",
-        data: {
-          name: "",
-          description: "",
-          portionAmount: 1,
-          preparationTime: 1,
-          favorite: false,
-          imageUrl: "",
-          ingredients: []
-        }
-      });
-    }
-    else {
-      //no BE exist at this time
-      // fetch(`https://uucoffeeapi.hudatec.cz/api/recipes/` + id, {
-      //   method: "GET",
-      // }).then(async (response) => {
-      //   const responseJson = await response.json();
-      //   if (response.status >= 400) {
-      //     setDetailCall({ state: "error", error: responseJson });
-      //   } else {
-      //     setDetailCall({ state: "success", data: responseJson });
-      //   }
-      // })
-      setUserList({
-        state: "success",
-        data: {
-          userList: [
-            {
-              userId: 1,
-              userName: "Dave"
-            },
-            {
-              userId: 2,
-              userName: "Bob"
-            },
-            {
-              userId: 3,
-              userName: "Steve"
-            }
-          ]
-        }
-      })
-    };
-  }, []); // an empty condition field means that the code will run only once
-
   const handleClose = () => OpenManagementCallback.setter(false);
 
   const childRef = useRef();
 
   const updateItemList = (newItemList) => {
-    updataManagementData({ listName: managementData.listName, memberList: newItemList })
-
+    updataManagementData({ listName: managementData.listName, memberList: newItemList });
+    handleClose();
   }
 
   return (
@@ -97,7 +38,7 @@ function ManagementModal(props) {
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {isOwner ?
+          {isCurrentUserOwner ?
           <Form.Control
             style={{ width: 300, height: 30 }}
             type="textarea"
@@ -105,7 +46,7 @@ function ManagementModal(props) {
             onChange={(event) => setManagementData({ ...managementData, listName: event.target.value })}
           /> : managementData.listName}
           <br/>
-          {isOwner ?
+          {isCurrentUserOwner ?
             <>
               <Button variant="primary" onClick={() => { }}>
                 Delete List (Nen implementovno)
@@ -115,18 +56,19 @@ function ManagementModal(props) {
               </Button>
             </>
             :
-            <Button variant="primary" onClick={() => updataManagementData({ listName: managementData.listName, memberList: managementData.memberList.filter(item => item.userId !== currentUserId) })}>
+            <Button variant="primary" onClick={leaveListCallback}>
               Leave List
             </Button>
           }
           <AddableListWithSet
             ref={childRef}
-            userList={nonOwnerUsers}
+            userList={userList}
+            nonOwnerUsers={nonOwnerUsers}
             itemList={memberList}
             UpdateCallback={{ value: undefined, setter: handleClose }} // moved to list to prevent issue with text fields
             StartEditingCallback={{ value: true, setter: handleClose }}
-            showAddButton={isOwner}
-            editable={isOwner}
+            showAddButton={isCurrentUserOwner}
+            editable={isCurrentUserOwner}
             extraButtonsCreator={() => { }}
             updateItemListCallback={updateItemList}
             itemCreatorFunction={() => { return { caption: "newItem", done: false } }}
