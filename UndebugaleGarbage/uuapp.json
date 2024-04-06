@@ -1,0 +1,27 @@
+{
+  "product": "fedu2",
+  "version": "0.1.0",
+  "license": "License Commercial",
+  "description": {
+    "en": "",
+    "cs": ""
+  },
+  "docUri": "",
+  "flsUri": "",
+  "slsUri": "",
+  "imageUri": "",
+  "devkit": {
+    "development": {
+      "appBoxLocationUri": "----- VALUE REQUIRED -----",
+      "appDeploymentUri": null,
+      "resourcePoolUri": "----- VALUE REQUIRED -----"
+    }
+  },
+  "fedu2": {
+    "namespace": "Fedu2",
+    "sourceUri": "https://cdn.plus4u.net/fedu2-fedu2/%s/fedu2.min.js",
+    "componentList": []
+  },
+  "mu_shopList_main-hi": {},
+  "mu_shopList_main-server": {}
+}
