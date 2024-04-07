@@ -1,3 +1,4 @@
+
 import AddableList from './AddableList.js';
 import { useState, useEffect, useMemo } from 'react';
 import Filter from './Filter.js';
@@ -6,7 +7,9 @@ import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import Button from "react-bootstrap/Button";
 import UserSelector from "./user.js";
-//import { UserProvider, UserSelector, useUser } from "./user.js"
+//import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
+
+
 
 const USERS = [
   { id: 234, name: "Amelia" },
@@ -125,6 +128,7 @@ function Detail() {
        } />
       {detailData.state === "success" && isCurentUserMember && <>
         <Filter
+        className="mui-container"
           ListName={detailData.data.listName}
           ShowDoneCallback={{ value: showDone, setter: changeShowDone }}
           OpenManagementCallback={{ value: showManagementModal, setter: setShowManagementModal }}

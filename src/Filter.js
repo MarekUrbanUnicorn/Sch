@@ -9,7 +9,7 @@ function Filter(props) {
   
 
   return (
-    <div className="Filter">
+    <div className="card">
       <h1>{ListName}</h1>
       <label>
         Show completed items: <input
@@ -19,7 +19,7 @@ function Filter(props) {
           disabled={isEditing}
         />
       </label>  
-      <Button variant="primary" onClick={() => OpenManagementCallback.setter(true)}>
+      <Button className="modalButton" variant="primary" onClick={() => OpenManagementCallback.setter(true)}>
         Launch Management Modal
       </Button>
       <ManagementModal OpenManagementCallback={OpenManagementCallback} isCurrentUserOwner={isCurrentUserOwner} listName={ListName} updataManagementData={updataManagementData} memberList={memberList} userList={userList} nonOwnerUsers={nonOwnerUsers} leaveListCallback={leaveListCallback}/>
