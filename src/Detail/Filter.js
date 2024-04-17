@@ -1,5 +1,5 @@
 import react from 'react';
-import './App.css';
+import '../App.css';
 import Button from "react-bootstrap/Button";
 import { useState, useEffect, useMemo } from 'react';
 import ManagementModal from "./ManagementModal.js"

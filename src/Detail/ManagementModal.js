@@ -1,4 +1,4 @@
-import './App.css';
+import '../App.css';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";

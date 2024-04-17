@@ -2,11 +2,11 @@
 import AddableList from './AddableList.js';
 import { useState, useEffect, useMemo } from 'react';
 import Filter from './Filter.js';
-import './App.css';
+import '../App.css';
 import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import Button from "react-bootstrap/Button";
-import UserSelector from "./user.js";
+import UserSelector from "../user.js";
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
@@ -121,7 +121,7 @@ function Detail() {
   return (
     //<UserProvider>
     //  <UserSelector/>
-    <>
+    <div className='Content'>
       <UserSelector userId={userPos} users={USERS} onChange={(e) =>
         { 
           setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])}
@@ -164,7 +164,7 @@ function Detail() {
         <h1 className="noAcessItem">No Acess</h1>
         <p className="noAcessItem">You are not authorised to view this shopping list.</p>
       </div>}
-    </>
+    </div>
     //</UserProvider>
   );
 }

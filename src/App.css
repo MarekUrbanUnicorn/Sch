@@ -3,8 +3,28 @@
   margin-left: 30%;
 }
 
+.filterButton {
+  width: 20%;
+}
+
+.buttonContrainer {
+  display: flex;
+}
+
+.createButton {
+  width: 20%;
+  margin-left: 60%;
+}
+
 .noAcessItem {
   width: 100%;
   text-align: center;
 }
-
+.App {
+  padding-top: 60px;
+  margin: 16px;
+}
+.Content {
+  padding-top: 60px;
+  margin: 16px;
+}

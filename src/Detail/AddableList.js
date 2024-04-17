@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Icon from "@mdi/react";
 import { mdiPlaylistRemove } from "@mdi/js";
-import './App.css';
+import '../App.css';
 import { useState, useEffect, useMemo } from 'react';
 
 function AddableList(props) {
