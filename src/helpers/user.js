@@ -1,4 +1,12 @@
 
+const USERS = [
+  { id: 234, name: "Amelia" },
+  { id: 123, name: "James" },
+  { id: 345, name: "John" },
+  { id: 456, name: "Chloe" }
+];
+
+
 function UserSelector(props) {
   return <select value={props.userId} onChange={props.onChange}>
     {props.users.map(({ id, name }) => (
@@ -23,5 +31,5 @@ function UserSelector(props) {
 *   return ...;
 * }
 * */
-
+export { UserSelector, USERS }
 export default UserSelector ;

@@ -7,7 +7,7 @@ import '../App.css';
 import { useState, useEffect, useMemo } from 'react';
 
 function AddableList(props) {
-  const { itemList, showAddButton, editable, extraButtonsCreator, updateItemListCallback, itemCreatorFunction, StartEditingCallback, UpdateCallback } = props;
+  const { buttonsDisabled, itemList, showAddButton, editable, extraButtonsCreator, updateItemListCallback, itemCreatorFunction, StartEditingCallback, UpdateCallback } = props;
 
   const [list, setList] = useState([]);
 
@@ -40,12 +40,13 @@ function AddableList(props) {
   }
 
   const DeleteButton = index => (<Button
+    disabled={buttonsDisabled}
     style={{ padding: "4px", paddingTop: "1px" }}
     variant="outline-danger"
     onClick={() => DeleteItem(index)}><Icon size={1} path={mdiPlaylistRemove} /></Button>);
   return (<>
-    <Button onClick={ChanageEditable}>{StartEditingCallback.value ? "Cancel Edits" : "Edit List"}</Button>
-    {StartEditingCallback.value && (<Button onClick={finnishUpdate}>Save Chenges</Button>)}
+    <Button disabled={buttonsDisabled} onClick={ChanageEditable}>{StartEditingCallback.value ? "Cancel Edits" : "Edit List"}</Button>
+    {StartEditingCallback.value && (<Button disabled={buttonsDisabled} onClick={finnishUpdate}>Save Chenges</Button>)}
     <Table>
       <thead>
         <tr>
@@ -76,6 +77,7 @@ function AddableList(props) {
         {editable && showAddButton && (<tr key="add">
           <td>
             <Button
+              disabled={buttonsDisabled}
               style={{ padding: "4px", paddingTop: "1px" }}
               variant="outline"
               onClick={() => AddItem()}>Add Item</Button>

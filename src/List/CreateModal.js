@@ -3,15 +3,28 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import Box from '@mui/material/Box';
 
 function CreateModal(props) {
   const { OpenCreateModalCallback, createCallback } = props;
 
   const [listName, setListName] = useState("");
+  const [modalData, setModalData] = useState({ state: "initial" });
 
   const handleClose = () => OpenCreateModalCallback.setter(false);
 
-  ///DEBUD use this to change if you are owner
+  var disableButtons;
+  switch (modalData.state) {
+    case "pending":
+    case "exit":
+      disableButtons = true
+      break;
+    case "initial":
+    case "error":
+    default:
+      disableButtons = false;
+      break;
+  }
 
   return (
     <>
@@ -19,6 +32,10 @@ function CreateModal(props) {
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
+        {modalData.error && <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
+          {modalData.error}
+        </Box>
+        }
         <Modal.Body>
           <Form.Control
             style={{ width: 300, height: 30 }}
@@ -28,10 +45,17 @@ function CreateModal(props) {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => { handleClose() }}>
+          <Button variant="secondary" disabled={disableButtons} onClick={() => { handleClose() }}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => createCallback(listName)}>
+          <Button variant="primary" disabled={disableButtons} onClick={() => {
+            async function fetchData() {
+              setModalData({ state: "pending" })
+              const newState = await createCallback(listName)
+              setModalData(newState)
+            }
+            fetchData()
+          }}>
             Save Changes
           </Button>
         </Modal.Footer>

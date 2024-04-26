@@ -6,61 +6,58 @@ import '../App.css';
 import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import Button from "react-bootstrap/Button";
-import UserSelector from "../user.js";
+import { UserSelector, USERS } from "../helpers/user.js";
+import Call from '../helpers/BackendCaller.js';
+import { Outlet, useNavigate } from "react-router-dom";
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
 
-const USERS = [
-  { id: 234, name: "Amelia" },
-  { id: 123, name: "James" },
-  { id: 345, name: "John" },
-  { id: 456, name: "Chloe" }
-];
-
 function Detail() {
+  let navigate = useNavigate();
   const [showDone, setShowDone] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [showManagementModal, setShowManagementModal] = useState(false);
   const [detailData, setDetailData] = useState({
-    state: "pending",
+    state: "initial",
   });
 
   useEffect(() => {
-    if (false) { //code for creation
+    async function fetchData() {
       setDetailData({
-        state: "success",
-        data: {
-          name: "",
-          description: "",
-          portionAmount: 1,
-          preparationTime: 1,
-          favorite: false,
-          imageUrl: "",
-          ingredients: []
-        }
-      });
-      setEditing(true);
-    }
-    else {
-      //no BE exist at this time
-      setDetailData({
-        state: "success",
-        data: {
-          ownerId: 234,
-          listName: "Dave's List",
-          itemList: [
-            {
-              caption: "Item 1",
-              done: false
-            }
-          ],
-          memberList: [234]
-        }
+        ...detailData,
+        state: "pending"
       })
-    };
+      const resp = await Call("ShopList/Detail")
+      if (resp.error) {
+        setDetailData({
+          ...resp,
+          state: "error",
+        })
+      }
+      else {
+        setDetailData({
+          ...resp,
+          state: "success",
+        })
+      }
+    }
+    fetchData()
   }, []); // an empty condition field means that the code will run only once
 
+  const buttonsDisabled = useMemo(() => {
+    switch (detailData.state) {
+
+      case "pending":
+        return true
+
+      default:
+      case "success":
+      case "error":
+      case "initial":
+        return false
+    }
+  })
 
   const changeShowDone = () => {
     setShowDone(!showDone);
@@ -80,7 +77,7 @@ function Detail() {
     return { allItemList: value, itemList: value.filter(item => !item.done) }
   }, [detailData, showDone])
 
-  const updateItemList = (newItemList) => {
+  const updateItemList = async (newItemList) => {
 
     newItemList.forEach(newItem => {
       if (newItem.index !== undefined) {
@@ -90,19 +87,112 @@ function Detail() {
         allItemList.push(newItem)
       }
     });
-    //later add be call
-    setDetailData({ ...detailData, data: { ...detailData.data, itemList: allItemList.filter(item => item.delete !== true) } })
+
+
+    setDetailData({
+      ...detailData,
+      state: "pending"
+    })
+    const resp = await Call("ShopList/Update")
+    if (resp.error) {
+      setDetailData({
+        ...resp,
+        state: "error",
+      })
+    }
+    else {
+      setDetailData({
+        ...resp,
+        state: "success",
+      })
+    }
+    // setDetailData({ ...detailData, data: { ...detailData.data, itemList: allItemList.filter(item => item.delete !== true) } })
   }
 
-  const updataManagementData = (newManagementData) => {
-    //later add be call
-    setDetailData({ ...detailData, data: { ...detailData.data, memberList: newManagementData.memberList.map(member => member.id), listName: newManagementData.listName } })
+  const updataManagementData = async (newManagementData) => {
+    setDetailData({
+      ...detailData,
+      state: "pending"
+    })
+    const resp = await Call("Management/Update")
+    if (resp.error) {
+      setDetailData({
+        ...resp,
+        state: "error",
+      })
+    }
+    else {
+      setDetailData({
+        ...resp,
+        state: "success",
+      })
+    }
+    // setDetailData({ ...detailData, data: { ...detailData.data, memberList: newManagementData.memberList.map(member => member.id), listName: newManagementData.listName } })
   }
 
   const [currentUser, setUser] = useState(USERS[0]);
 
-  const leaveListCallback = () => {
-    setDetailData({ ...detailData, data: { ...detailData.data, memberList: detailData.data.memberList.filter((id) => id != currentUser.id), } })
+  const leaveListCallback = async () => {
+    setDetailData({
+      ...detailData,
+      state: "pending"
+    })
+    const resp = await Call("Management/Leave")
+    if (resp.error) {
+      setDetailData({
+        ...resp,
+        state: "error",
+      })
+    }
+    else {
+      setDetailData({
+        ...resp,
+        state: "success",
+      })
+      navigate("/")
+    }
+    // setDetailData({ ...detailData, data: { ...detailData.data, memberList: detailData.data.memberList.filter((id) => id != currentUser.id), } })
+  }
+  const deleteListCallback = async () => {
+    setDetailData({
+      ...detailData,
+      state: "pending"
+    })
+    const resp = await Call("Management/Delete")
+    if (resp.error) {
+      setDetailData({
+        ...resp,
+        state: "error",
+      })
+    }
+    else {
+      setDetailData({
+        ...resp,
+        state: "success",
+      })
+      navigate("/")
+    }
+    // setDetailData({ ...detailData, data: { ...detailData.data, memberList: detailData.data.memberList.filter((id) => id != currentUser.id), } })
+  }
+  const archiveListCallback = async () => {
+    setDetailData({
+      ...detailData,
+      state: "pending"
+    })
+    const resp = await Call("Management/Archive")
+    if (resp.error) {
+      setDetailData({
+        ...resp,
+        state: "error",
+      })
+    }
+    else {
+      setDetailData({
+        ...resp,
+        state: "success",
+      })
+    }
+    // setDetailData({ ...detailData, data: { ...detailData.data, memberList: detailData.data.memberList.filter((id) => id != currentUser.id), } })
   }
   const userPos = USERS.map((user, index) => { return { ...user, index } }).filter(user => user.id === currentUser.id).index;
   const { isCurrentUserOwner, nonOwnerUsers, memberList, isCurentUserMember } = useMemo(() => {
@@ -111,7 +201,7 @@ function Detail() {
         isCurentUserMember: detailData.data.memberList.includes(currentUser.id),
         isCurrentUserOwner: detailData.data.ownerId === currentUser.id,
         nonOwnerUsers: USERS?.filter(user => user.userId !== detailData.data.ownerId) ?? [],
-        memberList: detailData.data.memberList.map(member => { return { ...USERS.filter(({id}) => id === member)[0], isOwner: detailData.data.ownerId === member } })
+        memberList: detailData.data.memberList.map(member => { return { ...USERS.filter(({ id }) => id === member)[0], isOwner: detailData.data.ownerId === member } })
       }
     }
     else {
@@ -122,14 +212,16 @@ function Detail() {
     //<UserProvider>
     //  <UserSelector/>
     <div className='Content'>
-      <UserSelector userId={userPos} users={USERS} onChange={(e) =>
-        { 
-          setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])}
-       } />
-      {detailData.state === "success" && isCurentUserMember && <>
+      <UserSelector userId={userPos} users={USERS} onChange={(e) => {
+        setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
+      }
+      } />
+      {detailData.state !== "initial" && isCurentUserMember && <>
         <Filter
-        className="mui-container"
+          buttonsDisabled={buttonsDisabled}
+          className="mui-container"
           ListName={detailData.data.listName}
+          Archived={detailData.data.archived}
           ShowDoneCallback={{ value: showDone, setter: changeShowDone }}
           OpenManagementCallback={{ value: showManagementModal, setter: setShowManagementModal }}
           isEditing={isEditing}
@@ -137,10 +229,13 @@ function Detail() {
           updataManagementData={updataManagementData}
           memberList={memberList}
           leaveListCallback={leaveListCallback}
+          archiveListCallback={archiveListCallback} 
+          deleteListCallback={deleteListCallback}
           userList={USERS}
           nonOwnerUsers={nonOwnerUsers}
         />
         <AddableList
+          buttonsDisabled={buttonsDisabled}
           itemList={itemList}
           UpdateCallback={{ value: undefined, setter: updateData }} // moved to list to prevent issue with text fields
           StartEditingCallback={{ value: isEditing, setter: changeEditing }}
@@ -149,7 +244,7 @@ function Detail() {
           extraButtonsCreator={
             (item, editable, updateCallback) => {
               const value = item.done ? "Compleate" : "Not Compleate";
-              return !editable ? value : <Button onClick={() => {
+              return !editable ? value : <Button disabled={buttonsDisabled} onClick={() => {
                 updateCallback({ ...item, done: !item.done })
               }
               }>{value}</Button>
@@ -159,7 +254,7 @@ function Detail() {
           itemCreatorFunction={() => { return { caption: "newItem", done: false } }}
         />
       </>}
-      
+
       {detailData.state === "success" && !isCurentUserMember && <div className="noAcess">
         <h1 className="noAcessItem">No Acess</h1>
         <p className="noAcessItem">You are not authorised to view this shopping list.</p>

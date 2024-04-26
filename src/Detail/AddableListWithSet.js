@@ -22,7 +22,7 @@ const AddableListWithSet = forwardRef((props, ref) => {
   useEffect(() => { setList([...itemList]) }, [itemList])
   
   useImperativeHandle(ref, () => ({
-    finnishUpdate: () => {
+    finnishUpdate: async () => {
       updateItemListCallback(list);
       UpdateCallback.setter()
     },

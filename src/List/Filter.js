@@ -29,7 +29,7 @@ function Filter(props) {
           Filter Data
         </Button>
         <Button className="createButton" variant="primary" onClick={createList}>
-          Create New Filter
+          Create New Shopping List
         </Button>
       </div>
     </div>

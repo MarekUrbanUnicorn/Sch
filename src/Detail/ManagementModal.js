@@ -6,15 +6,9 @@ import Form from "react-bootstrap/Form";
 import AddableListWithSet from './AddableListWithSet.js';
 
 function ManagementModal(props) {
-  const { OpenManagementCallback, isCurrentUserOwner, listName, updataManagementData, memberList, nonOwnerUsers, leaveListCallback, userList } = props;
+  const { Archived, buttonsDisabled, deleteListCallback, archiveListCallback, OpenManagementCallback, isCurrentUserOwner, listName, updataManagementData, memberList, nonOwnerUsers, leaveListCallback, userList } = props;
 
   const [managementData, setManagementData] = useState({ listName, memberList });
-
-
-  ///DEBUD use this to change if you are owner
-
-
-
 
 
   useEffect(() => {
@@ -26,14 +20,14 @@ function ManagementModal(props) {
 
   const childRef = useRef();
 
-  const updateItemList = (newItemList) => {
-    updataManagementData({ listName: managementData.listName, memberList: newItemList });
-    handleClose();
+  const updateItemList = async (newItemList) => {
+    await updataManagementData({ listName: managementData.listName, memberList: newItemList });
+    handleClose(); //For some reasone the modal closes before this gets called maybe some state issue
   }
 
   return (
     <>
-      <Modal show={OpenManagementCallback.value} onHide={() => { setManagementData({ listName, memberList }); handleClose() }}>
+      <Modal show={OpenManagementCallback.value} onHide={() => { handleClose() }}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
@@ -44,19 +38,19 @@ function ManagementModal(props) {
             type="textarea"
             defaultValue={managementData.listName}
             onChange={(event) => setManagementData({ ...managementData, listName: event.target.value })}
-          /> : managementData.listName}
+          /> : managementData.listName}  {Archived && "Archived"}
           <br/>
           {isCurrentUserOwner ?
             <>
-              <Button variant="primary" onClick={() => { }}>
-                Delete List (Nen implementovno)
+              <Button disabled={buttonsDisabled} variant="primary" onClick={deleteListCallback}>
+                Delete List
               </Button>
-              <Button variant="primary" onClick={() => { }}>
-                Archive List (Nen implementovno)
+              <Button disabled={buttonsDisabled} variant="primary" onClick={archiveListCallback}>
+                {Archived && "Un" }Archive List
               </Button>
             </>
             :
-            <Button variant="primary" onClick={leaveListCallback}>
+            <Button disabled={buttonsDisabled} variant="primary" onClick={leaveListCallback}>
               Leave List
             </Button>
           }
@@ -75,10 +69,10 @@ function ManagementModal(props) {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => { setManagementData({ listName, memberList }); handleClose() }}>
+          <Button  disabled={buttonsDisabled} variant="secondary" onClick={() => { handleClose() }}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => childRef.current.finnishUpdate()}>
+          <Button  disabled={buttonsDisabled} variant="primary" onClick={() => childRef.current.finnishUpdate()}>
             Save Changes
           </Button>
         </Modal.Footer>
