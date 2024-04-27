@@ -9,6 +9,7 @@ import Button from "react-bootstrap/Button";
 import { UserSelector, USERS } from "../helpers/user.js";
 import Call from '../helpers/BackendCaller.js';
 import { Outlet, useNavigate } from "react-router-dom";
+import { Box } from '@mui/material';
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
@@ -96,6 +97,7 @@ function Detail() {
     const resp = await Call("ShopList/Update")
     if (resp.error) {
       setDetailData({
+        ...detailData,
         ...resp,
         state: "error",
       })
@@ -117,6 +119,7 @@ function Detail() {
     const resp = await Call("Management/Update")
     if (resp.error) {
       setDetailData({
+        ...detailData,
         ...resp,
         state: "error",
       })
@@ -140,6 +143,7 @@ function Detail() {
     const resp = await Call("Management/Leave")
     if (resp.error) {
       setDetailData({
+        ...detailData,
         ...resp,
         state: "error",
       })
@@ -161,6 +165,7 @@ function Detail() {
     const resp = await Call("Management/Delete")
     if (resp.error) {
       setDetailData({
+        ...detailData,
         ...resp,
         state: "error",
       })
@@ -182,6 +187,7 @@ function Detail() {
     const resp = await Call("Management/Archive")
     if (resp.error) {
       setDetailData({
+        ...detailData,
         ...resp,
         state: "error",
       })
@@ -212,6 +218,9 @@ function Detail() {
     //<UserProvider>
     //  <UserSelector/>
     <div className='Content'>
+      {detailData.state === "error" && <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
+        {detailData.error}
+      </Box>}
       <UserSelector userId={userPos} users={USERS} onChange={(e) => {
         setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
       }
@@ -229,7 +238,7 @@ function Detail() {
           updataManagementData={updataManagementData}
           memberList={memberList}
           leaveListCallback={leaveListCallback}
-          archiveListCallback={archiveListCallback} 
+          archiveListCallback={archiveListCallback}
           deleteListCallback={deleteListCallback}
           userList={USERS}
           nonOwnerUsers={nonOwnerUsers}

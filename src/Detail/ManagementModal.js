@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import AddableListWithSet from './AddableListWithSet.js';
+import { Box } from '@mui/material';
 
 function ManagementModal(props) {
   const { Archived, buttonsDisabled, deleteListCallback, archiveListCallback, OpenManagementCallback, isCurrentUserOwner, listName, updataManagementData, memberList, nonOwnerUsers, leaveListCallback, userList } = props;

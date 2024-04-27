@@ -9,6 +9,7 @@ import Button from "react-bootstrap/Button";
 import { USERS, UserSelector } from "../helpers/user.js";
 import CreateModal from './CreateModal.js';
 import { Outlet, useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
 import Call from '../helpers/BackendCaller.js';
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
@@ -83,12 +84,13 @@ function List() {
   }
   const createCallback = async () => {
     const resp = await Call("ShopList/Create")
-    if(resp.error)
-    {
-      return { ...resp, state: "error"}
+    if (resp.error) {
+      return {
+        ...resp, 
+        state: "error" 
+      }
     }
-    else
-    {
+    else {
       navigate("/detail/" + resp.id)
       return { state: "exit" }
     }
@@ -131,7 +133,37 @@ function List() {
       </>
       break;
     case "error":
-      content = <></>
+      content = <>
+        <Filter
+          changeFilter={changeFilterData}
+          filterValue={filterData}
+          applyFilter={CallBackendListCommand}
+          createList={changeShowCreateModal}
+        />
+        <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
+          {listData.error}
+        </Box>
+      </>
+      break;
+    case "error":
+      content = <>
+        <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
+          {listData.error}
+        </Box>
+        <Filter
+          changeFilter={changeFilterData}
+          filterValue={filterData}
+          applyFilter={CallBackendListCommand}
+          createList={changeShowCreateModal}
+        />
+        <ItemList
+          listItems={itemList}
+        />
+        <CreateModal
+          OpenCreateModalCallback={{ value: showCreateModal, setter: changeShowCreateModal }}
+          createCallback={createCallback}
+        />
+      </>
       break;
     case "pending":
       content = <>
