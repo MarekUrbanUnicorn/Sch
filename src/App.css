@@ -28,3 +28,12 @@
   padding-top: 60px;
   margin: 16px;
 }
+
+.selectorLightMode {
+  background-color: azure;
+  color:black
+}
+.selectorDarkMode {
+  background-color: darkgray;
+  color: yellow
+}

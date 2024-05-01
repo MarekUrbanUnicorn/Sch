@@ -8,7 +8,7 @@ const USERS = [
 
 
 function UserSelector(props) {
-  return <select value={props.userId} onChange={props.onChange}>
+  return <select className={props.className} value={props.userId} onChange={props.onChange}>
     {props.users.map(({ id, name }) => (
       <option key={id} value={id}>{name}</option>
     ))}

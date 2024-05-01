@@ -5,8 +5,10 @@ import Icon from "@mdi/react";
 import { mdiPlaylistRemove } from "@mdi/js";
 import '../App.css';
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
+import { useLang } from "../helpers/LangContext.js"
 
 const AddableListWithSet = forwardRef((props, ref) => {
+  const { getLsi } = useLang()
   const { itemList, showAddButton, editable, extraButtonsCreator, updateItemListCallback, StartEditingCallback, UpdateCallback, setOnFinishEdditing, nonOwnerUsers, userList } = props;
 
   const [list, setList] = useState([]);
@@ -53,7 +55,7 @@ const AddableListWithSet = forwardRef((props, ref) => {
     <Table>
       <thead>
         <tr>
-          <th>Name</th>
+          <th>{getLsi("detailModalListName")}</th>
           <th></th>
           <th></th>
         </tr>
@@ -80,7 +82,7 @@ const AddableListWithSet = forwardRef((props, ref) => {
         {editable && showAddButton && (<tr key="add">
           <td>
             <Form.Select as="elementType" value="-1" onChange={(event) => AddItem(parseInt(event.target.value))}>
-              <option value="-1">Přidat uživatele</option>
+              <option value="-1">{getLsi("detailModalListAdd")}</option>
               {userOptions}
             </Form.Select>
           </td>

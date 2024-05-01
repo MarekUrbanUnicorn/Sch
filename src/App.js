@@ -8,10 +8,20 @@ import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
 import styles from "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
+import { UserSelector, USERS } from "./helpers/user.js";
+import { useUser } from "./helpers/UserContext.js"
+import { useMode } from "./helpers/ModeContext.js"
+import { useLang } from "./helpers/LangContext.js"
 
 function App() {
   let navigate = useNavigate();
+  const { setUser, currentUser } = useUser();
+  const { getModeSelector, getMsi } = useMode();
+  const { getLangSelector } = useLang();
+
+  const userPos = USERS.map((user, index) => { return { ...user, index } }).filter(user => user.id === currentUser.id).index;
+
 
   return (
     <div className={styles.App}>
@@ -23,12 +33,18 @@ function App() {
         variant="dark"
       >
         <Container fluid>
-    <div class="AppDave">
-          <Navbar.Brand onClick={() => navigate("/")}>
-            UUCofee
-          </Navbar.Brand>
-    </div>
+          <div class="AppDave">
+            <Navbar.Brand onClick={() => navigate("/")}>
+              UUShopList
+            </Navbar.Brand>
+          </div>
         </Container>
+        {getModeSelector(getMsi("selector"))}
+        {getLangSelector(getMsi("selector"))}
+        <UserSelector className={getMsi("selector")} userId={userPos} users={USERS} onChange={(e) => {
+          setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
+        }
+        } />
       </Navbar>
       <Outlet />
     </div>);

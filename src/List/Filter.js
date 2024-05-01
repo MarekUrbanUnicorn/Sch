@@ -2,23 +2,25 @@ import react from 'react';
 import '../App.css';
 import Button from "react-bootstrap/Button";
 import { useState, useEffect, useMemo } from 'react';
+import { useLang } from "../helpers/LangContext.js"
 
 function Filter(props) {
+  const { getLsi } = useLang()
   const { changeFilter, filterValue, applyFilter, createList } = props;
 
 
   return (
     <div className="card">
-      <h1>List of Shopping Lists</h1>
+      <h1>{getLsi("listHeader")}</h1>
       <label>
-        Show archived lists: <input
+        {getLsi("listSwitchArchived")}: <input
           type="checkbox"
           checked={filterValue.showArchived}
           onChange={() => changeFilter({ showArchived: !filterValue.showArchived })}
         />
       </label>
       <label>
-        Show only own lists: <input
+        {getLsi("listSwitchOwn")}: <input
           type="checkbox"
           checked={filterValue.showOnlyOwned}
           onChange={() => changeFilter({ showOnlyOwned: !filterValue.showOnlyOwned })}
@@ -26,10 +28,10 @@ function Filter(props) {
       </label>
       <div className="buttonContrainer">
         <Button className="filterButton" variant="primary" onClick={applyFilter}>
-          Filter Data
+          {getLsi("listButtonFilter")}
         </Button>
         <Button className="createButton" variant="primary" onClick={createList}>
-          Create New Shopping List
+          {getLsi("listButtonCreate")}
         </Button>
       </div>
     </div>

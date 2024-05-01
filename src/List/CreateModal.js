@@ -4,9 +4,11 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Box from '@mui/material/Box';
+import { useLang } from "../helpers/LangContext.js"
 
 function CreateModal(props) {
   const { OpenCreateModalCallback, createCallback } = props;
+  const { getLsi } = useLang()
 
   const [listName, setListName] = useState("");
   const [modalData, setModalData] = useState({ state: "initial" });
@@ -30,7 +32,7 @@ function CreateModal(props) {
     <>
       <Modal show={OpenCreateModalCallback.value} onHide={() => { handleClose() }}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{getLsi("listModalHeading")}</Modal.Title>
         </Modal.Header>
         {modalData.error && <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
           {modalData.error}
@@ -46,7 +48,7 @@ function CreateModal(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" disabled={disableButtons} onClick={() => { handleClose() }}>
-            Close
+          {getLsi("listModalClose")}
           </Button>
           <Button variant="primary" disabled={disableButtons} onClick={() => {
             async function fetchData() {
@@ -56,7 +58,7 @@ function CreateModal(props) {
             }
             fetchData()
           }}>
-            Save Changes
+            {getLsi("listModalSave")}
           </Button>
         </Modal.Footer>
       </Modal>

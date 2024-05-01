@@ -11,6 +11,7 @@ import CreateModal from './CreateModal.js';
 import { Outlet, useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Call from '../helpers/BackendCaller.js';
+import { useUser } from "../helpers/UserContext.js"
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
@@ -18,8 +19,7 @@ import Call from '../helpers/BackendCaller.js';
 
 function List() {
   let navigate = useNavigate();
-  const [currentUser, setUser] = useState(USERS[0]);
-  const userPos = USERS.map((user, index) => { return { ...user, index } }).filter(user => user.id === currentUser.id).index;
+  const { currentUser} = useUser()
   const [filterData, setFilterData] = useState({ showArchived: false, showOnlyOwned: false });
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [usedFilter, setUsedFilter] = useState({ filterData });
@@ -145,26 +145,6 @@ function List() {
         </Box>
       </>
       break;
-    case "error":
-      content = <>
-        <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
-          {listData.error}
-        </Box>
-        <Filter
-          changeFilter={changeFilterData}
-          filterValue={filterData}
-          applyFilter={CallBackendListCommand}
-          createList={changeShowCreateModal}
-        />
-        <ItemList
-          listItems={itemList}
-        />
-        <CreateModal
-          OpenCreateModalCallback={{ value: showCreateModal, setter: changeShowCreateModal }}
-          createCallback={createCallback}
-        />
-      </>
-      break;
     case "pending":
       content = <>
         <Filter
@@ -186,10 +166,6 @@ function List() {
 
   return (
     <div className='Content'>
-      <UserSelector userId={userPos} users={USERS} onChange={(e) => {
-        setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
-      }
-      } />
       {content}
     </div>
   );

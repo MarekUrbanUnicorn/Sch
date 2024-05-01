@@ -10,11 +10,15 @@ import { UserSelector, USERS } from "../helpers/user.js";
 import Call from '../helpers/BackendCaller.js';
 import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from '@mui/material';
+import {useUser} from "../helpers/UserContext.js"
+import {useLang} from "../helpers/LangContext.js"
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
 
 function Detail() {
+  const { currentUser} = useUser()
+  const { getLsi } = useLang()
   let navigate = useNavigate();
   const [showDone, setShowDone] = useState(false);
   const [isEditing, setEditing] = useState(false);
@@ -133,8 +137,6 @@ function Detail() {
     // setDetailData({ ...detailData, data: { ...detailData.data, memberList: newManagementData.memberList.map(member => member.id), listName: newManagementData.listName } })
   }
 
-  const [currentUser, setUser] = useState(USERS[0]);
-
   const leaveListCallback = async () => {
     setDetailData({
       ...detailData,
@@ -200,7 +202,6 @@ function Detail() {
     }
     // setDetailData({ ...detailData, data: { ...detailData.data, memberList: detailData.data.memberList.filter((id) => id != currentUser.id), } })
   }
-  const userPos = USERS.map((user, index) => { return { ...user, index } }).filter(user => user.id === currentUser.id).index;
   const { isCurrentUserOwner, nonOwnerUsers, memberList, isCurentUserMember } = useMemo(() => {
     if (detailData?.data?.ownerId) {
       return {
@@ -221,10 +222,6 @@ function Detail() {
       {detailData.state === "error" && <Box component="section" sx={{ p: 2, bgcolor: '#fc8279' }}>
         {detailData.error}
       </Box>}
-      <UserSelector userId={userPos} users={USERS} onChange={(e) => {
-        setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
-      }
-      } />
       {detailData.state !== "initial" && isCurentUserMember && <>
         <Filter
           buttonsDisabled={buttonsDisabled}
@@ -252,7 +249,7 @@ function Detail() {
           editable={isEditing}
           extraButtonsCreator={
             (item, editable, updateCallback) => {
-              const value = item.done ? "Compleate" : "Not Compleate";
+              const value = item.done ? getLsi("detailItemCompleate") : getLsi("detailItemNotCompleate");
               return !editable ? value : <Button disabled={buttonsDisabled} onClick={() => {
                 updateCallback({ ...item, done: !item.done })
               }
@@ -265,8 +262,8 @@ function Detail() {
       </>}
 
       {detailData.state === "success" && !isCurentUserMember && <div className="noAcess">
-        <h1 className="noAcessItem">No Acess</h1>
-        <p className="noAcessItem">You are not authorised to view this shopping list.</p>
+        <h1 className="noAcessItem">{getLsi("detailNoAcessHeader")}</h1>
+        <p className="noAcessItem">{getLsi("detailNoAcessText")}</p>
       </div>}
     </div>
     //</UserProvider>
