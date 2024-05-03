@@ -12,6 +12,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Call from '../helpers/BackendCaller.js';
 import { useUser } from "../helpers/UserContext.js"
+import { useMode } from "../helpers/ModeContext.js"
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
@@ -19,7 +20,8 @@ import { useUser } from "../helpers/UserContext.js"
 
 function List() {
   let navigate = useNavigate();
-  const { currentUser} = useUser()
+  const { currentUser } = useUser()
+  const { getMsi } = useMode()
   const [filterData, setFilterData] = useState({ showArchived: false, showOnlyOwned: false });
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [usedFilter, setUsedFilter] = useState({ filterData });
@@ -86,8 +88,8 @@ function List() {
     const resp = await Call("ShopList/Create")
     if (resp.error) {
       return {
-        ...resp, 
-        state: "error" 
+        ...resp,
+        state: "error"
       }
     }
     else {
@@ -165,7 +167,7 @@ function List() {
   }
 
   return (
-    <div className='Content'>
+    <div className="Content">
       {content}
     </div>
   );

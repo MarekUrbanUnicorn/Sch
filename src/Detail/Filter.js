@@ -4,14 +4,17 @@ import Button from "react-bootstrap/Button";
 import { useState, useEffect, useMemo } from 'react';
 import ManagementModal from "./ManagementModal.js"
 import {useLang} from "../helpers/LangContext.js"
+import { useMode } from "../helpers/ModeContext.js"
+import Box from '@mui/material/Box'
 
 function Filter(props) {
   const { getLsi } = useLang()
+  const { getMsi } = useMode()
   const { Archived, archiveListCallback, deleteListCallback, buttonsDisabled, ListName, userList, ShowDoneCallback, OpenManagementCallback, isEditing, isCurrentUserOwner, updataManagementData, memberList, nonOwnerUsers, leaveListCallback } = props;
 
 
   return (
-    <div className="card">
+    <Box component="section" sx={getMsi("listBox")}>
       <h1>{ListName}  {Archived && "Archived"}</h1>
       <label>
         {getLsi("detailFilterShowDone")}: <input
@@ -21,7 +24,7 @@ function Filter(props) {
           disabled={isEditing}
         />
       </label>
-      <Button className="modalButton" variant="primary" onClick={() => OpenManagementCallback.setter(true)}>
+      <Button className="modelButton"  variant={getMsi("button")} onClick={() => OpenManagementCallback.setter(true)}>
         {getLsi("detailFilterLaunchModal")}
       </Button>
       <ManagementModal
@@ -36,7 +39,7 @@ function Filter(props) {
         leaveListCallback={leaveListCallback}
         archiveListCallback={archiveListCallback}
         deleteListCallback={deleteListCallback} />
-    </div>
+    </Box>
   );
 }
 

@@ -1,15 +1,11 @@
 // AuthContext.js
 import React, { createContext, useContext, useState } from 'react';
+import msi from "./msi.js"
 
 
-const msi = {
-  "selector" : {
-    "light": "selectorLightMode",
-    "dark": "selectorDarkMode"
-  }
-}
 
 const ModeContext = createContext();
+
 
 export const ModeProvider = ({ children }) => {
 
@@ -28,15 +24,29 @@ export const ModeProvider = ({ children }) => {
   }
 
   function getModeSelector(className) {
-    return <select className={className}  value={mode} onChange={(e) => { setAndValidateMode(e.target.value) }}>
+    return <select className={className} value={mode} onChange={(e) => { setAndValidateMode(e.target.value) }}>
       <option value="light">Light Mode</option>
       <option value="dark">Dark Mode</option>
     </select>
   }
 
-  function getMsi(className)
-  {
-    return msi[className][mode];
+  function getMsi(className) {
+    if (msi) {
+      if (msi[className] !== undefined) {
+        if (msi[className][mode] !== undefined) {
+          return msi[className][mode];
+        }
+        else {
+          console.error(`unknown lang mutation with key ${mode} on lsiItem ${className}`)
+        }
+      }
+      else {
+        console.error(`unknown lsiItem ${className}`)
+      }
+    }
+    else {
+      console.error(`failed to load LSI file`)
+    }
   }
 
   return (
@@ -49,3 +59,5 @@ export const ModeProvider = ({ children }) => {
 };
 
 export const useMode = () => useContext(ModeContext);
+
+

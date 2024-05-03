@@ -13,6 +13,7 @@ import { UserSelector, USERS } from "./helpers/user.js";
 import { useUser } from "./helpers/UserContext.js"
 import { useMode } from "./helpers/ModeContext.js"
 import { useLang } from "./helpers/LangContext.js"
+import Box from '@mui/material/Box';
 
 function App() {
   let navigate = useNavigate();
@@ -24,29 +25,31 @@ function App() {
 
 
   return (
-    <div className={styles.App}>
-      <Navbar
-        fixed="top"
-        expand={"sm"}
-        className="mb-3"
-        bg="dark"
-        variant="dark"
-      >
-        <Container fluid>
-          <div class="AppDave">
-            <Navbar.Brand onClick={() => navigate("/")}>
-              UUShopList
-            </Navbar.Brand>
-          </div>
-        </Container>
-        {getModeSelector(getMsi("selector"))}
-        {getLangSelector(getMsi("selector"))}
-        <UserSelector className={getMsi("selector")} userId={userPos} users={USERS} onChange={(e) => {
-          setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
-        }
-        } />
-      </Navbar>
-      <Outlet />
+    <div className="App">
+      <Box component="section" height={"100%"} sx={getMsi("appBox")}>
+        <Navbar
+          fixed="top"
+          expand={"sm"}
+          className="mb-3"
+          bg="dark"
+          variant="dark"
+        >
+          <Container fluid>
+            <div class="AppDave">
+              <Navbar.Brand onClick={() => navigate("/")}>
+                UUShopList
+              </Navbar.Brand>
+            </div>
+          </Container>
+          {getModeSelector(getMsi("selector"))}
+          {getLangSelector(getMsi("selector"))}
+          <UserSelector className={getMsi("selector")} userId={userPos} users={USERS} onChange={(e) => {
+            setUser(USERS.filter(({ id }) => id === parseInt(e.target.value))[0])
+          }
+          } />
+        </Navbar>
+        <Outlet />
+      </Box>
     </div>);
 }
 

@@ -5,8 +5,10 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Box from '@mui/material/Box';
 import { useLang } from "../helpers/LangContext.js"
+import { useMode } from "../helpers/ModeContext.js"
 
 function CreateModal(props) {
+  const { getMsi } = useMode()
   const { OpenCreateModalCallback, createCallback } = props;
   const { getLsi } = useLang()
 
@@ -29,8 +31,8 @@ function CreateModal(props) {
   }
 
   return (
-    <>
-      <Modal show={OpenCreateModalCallback.value} onHide={() => { handleClose() }}>
+    <Modal show={OpenCreateModalCallback.value} onHide={() => { handleClose() }}>
+      <Box component="section" sx={getMsi("modalBox")}>
         <Modal.Header closeButton>
           <Modal.Title>{getLsi("listModalHeading")}</Modal.Title>
         </Modal.Header>
@@ -40,17 +42,17 @@ function CreateModal(props) {
         }
         <Modal.Body>
           <Form.Control
-            style={{ width: 300, height: 30 }}
+            style={getMsi("formControl")}
             type="textarea"
             defaultValue={listName}
             onChange={(event) => setListName(event.target.value)}
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" disabled={disableButtons} onClick={() => { handleClose() }}>
-          {getLsi("listModalClose")}
+          <Button variant={getMsi("buttonSecondary")} disabled={disableButtons} onClick={() => { handleClose() }}>
+            {getLsi("listModalClose")}
           </Button>
-          <Button variant="primary" disabled={disableButtons} onClick={() => {
+          <Button variant={getMsi("button")} disabled={disableButtons} onClick={() => {
             async function fetchData() {
               setModalData({ state: "pending" })
               const newState = await createCallback(listName)
@@ -61,8 +63,8 @@ function CreateModal(props) {
             {getLsi("listModalSave")}
           </Button>
         </Modal.Footer>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   );
 }
 

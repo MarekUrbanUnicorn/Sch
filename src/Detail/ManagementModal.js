@@ -6,8 +6,10 @@ import Form from "react-bootstrap/Form";
 import AddableListWithSet from './AddableListWithSet.js';
 import { Box } from '@mui/material';
 import { useLang } from "../helpers/LangContext.js"
+import { useMode } from "../helpers/ModeContext.js"
 
 function ManagementModal(props) {
+  const { getMsi } = useMode()
   const { getLsi } = useLang()
   const { Archived, buttonsDisabled, deleteListCallback, archiveListCallback, OpenManagementCallback, isCurrentUserOwner, listName, updataManagementData, memberList, nonOwnerUsers, leaveListCallback, userList } = props;
 
@@ -29,15 +31,15 @@ function ManagementModal(props) {
   }
 
   return (
-    <>
-      <Modal show={OpenManagementCallback.value} onHide={() => { handleClose() }}>
+    <Modal show={OpenManagementCallback.value} onHide={() => { handleClose() }}>
+      <Box component="section" sx={getMsi("modalBox")}>
         <Modal.Header closeButton>
           <Modal.Title>{getLsi("detailModalHeading")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isCurrentUserOwner ?
             <Form.Control
-              style={{ width: 300, height: 30 }}
+              style={getMsi("formControl")}
               type="textarea"
               defaultValue={managementData.listName}
               onChange={(event) => setManagementData({ ...managementData, listName: event.target.value })}
@@ -45,15 +47,15 @@ function ManagementModal(props) {
           <br />
           {isCurrentUserOwner ?
             <>
-              <Button disabled={buttonsDisabled} variant="primary" onClick={deleteListCallback}>
+              <Button disabled={buttonsDisabled} variant={getMsi("button")} onClick={deleteListCallback}>
                 {getLsi("detailModalDelete")}
               </Button>
-              <Button disabled={buttonsDisabled} variant="primary" onClick={archiveListCallback}>
+              <Button disabled={buttonsDisabled} variant={getMsi("button")} onClick={archiveListCallback}>
                 {Archived ? getLsi("detailModalArchive") : getLsi("detailModalUnArchive")}
               </Button>
             </>
             :
-            <Button disabled={buttonsDisabled} variant="primary" onClick={leaveListCallback}>
+            <Button disabled={buttonsDisabled} variant={getMsi("button")} onClick={leaveListCallback}>
               {getLsi("detailModalLeave")}
             </Button>
           }
@@ -72,15 +74,15 @@ function ManagementModal(props) {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button disabled={buttonsDisabled} variant="secondary" onClick={() => { handleClose() }}>
+          <Button disabled={buttonsDisabled} variant={getMsi("buttonSecondary")} onClick={() => { handleClose() }}>
             {getLsi("detailModalClose")}
           </Button>
-          <Button disabled={buttonsDisabled} variant="primary" onClick={() => childRef.current.finnishUpdate()}>
+          <Button disabled={buttonsDisabled} variant={getMsi("button")} onClick={() => childRef.current.finnishUpdate()}>
             {getLsi("detailModalSave")}
           </Button>
         </Modal.Footer>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   );
 }
 

@@ -21,8 +21,7 @@
   text-align: center;
 }
 .App {
-  padding-top: 60px;
-  margin: 16px;
+  height: 100%;
 }
 .Content {
   padding-top: 60px;
@@ -30,10 +29,34 @@
 }
 
 .selectorLightMode {
-  background-color: azure;
-  color:black
+  /* no changes needed we are using the defaultbehavior */
 }
 .selectorDarkMode {
   background-color: darkgray;
-  color: yellow
+}
+
+.tableLightMode{
+  /* no changes needed we are using the defaultbehavior */
+}
+.tableDarkMode{
+  --bs-table-bg: darkgray !important;
+  --bs-table-border-color: black !important;
+}
+
+
+.modalButtonLightMode {
+  /* no changes needed we are using the defaultbehavior */
+}
+.modalButtonDarkMode {
+
+}
+.buttonLightMode {
+/* no changes needed we are using the defaultbehavior */
+}
+.buttonDarkMode {
+
+}
+
+html, body, body>div {
+  height: 100%;
 }

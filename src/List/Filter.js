@@ -3,14 +3,18 @@ import '../App.css';
 import Button from "react-bootstrap/Button";
 import { useState, useEffect, useMemo } from 'react';
 import { useLang } from "../helpers/LangContext.js"
+import { useMode } from "../helpers/ModeContext.js"
+import { useSize } from "../helpers/SizeContext.js"
+import Box from '@mui/material/Box';
 
 function Filter(props) {
   const { getLsi } = useLang()
+  const { getMsi } = useMode()
   const { changeFilter, filterValue, applyFilter, createList } = props;
 
 
   return (
-    <div className="card">
+    <Box component="section" sx={getMsi("listBox")}>
       <h1>{getLsi("listHeader")}</h1>
       <label>
         {getLsi("listSwitchArchived")}: <input
@@ -27,14 +31,14 @@ function Filter(props) {
         />
       </label>
       <div className="buttonContrainer">
-        <Button className="filterButton" variant="primary" onClick={applyFilter}>
+        <Button className="filterButton" variant={getMsi("button")} onClick={applyFilter}>
           {getLsi("listButtonFilter")}
         </Button>
-        <Button className="createButton" variant="primary" onClick={createList}>
+        <Button className="createButton" variant={getMsi("button")} onClick={createList}>
           {getLsi("listButtonCreate")}
         </Button>
       </div>
-    </div>
+    </Box>
   );
 }
 

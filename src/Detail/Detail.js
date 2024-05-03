@@ -12,11 +12,13 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from '@mui/material';
 import {useUser} from "../helpers/UserContext.js"
 import {useLang} from "../helpers/LangContext.js"
+import { useMode } from "../helpers/ModeContext.js"
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
 
 function Detail() {
+  const { getMsi } = useMode()
   const { currentUser} = useUser()
   const { getLsi } = useLang()
   let navigate = useNavigate();
@@ -250,7 +252,7 @@ function Detail() {
           extraButtonsCreator={
             (item, editable, updateCallback) => {
               const value = item.done ? getLsi("detailItemCompleate") : getLsi("detailItemNotCompleate");
-              return !editable ? value : <Button disabled={buttonsDisabled} onClick={() => {
+              return !editable ? value : <Button  variant={getMsi("button")} disabled={buttonsDisabled} onClick={() => {
                 updateCallback({ ...item, done: !item.done })
               }
               }>{value}</Button>

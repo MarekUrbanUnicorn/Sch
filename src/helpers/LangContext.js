@@ -38,7 +38,7 @@ export const LangProvider = ({ children }) => {
         }
       }
       else {
-        console.error(`unknown lsiItem ${lsiName}, ${JSON.stringify(lsi)}`)
+        console.error(`unknown lsiItem ${lsiName}`)
       }
     }
     else {

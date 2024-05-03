@@ -4,9 +4,12 @@ import Button from "react-bootstrap/Button";
 import { useState, useEffect, useMemo } from 'react';
 import { Outlet, useNavigate } from "react-router-dom";
 import { useLang } from "../helpers/LangContext.js"
+import { useMode } from "../helpers/ModeContext.js"
+import Box from '@mui/material/Box';
 
 function ItemList(props) {
   const { getLsi } = useLang()
+  const { getMsi } = useMode()
   const { listItems } = props;
   let navigate = useNavigate();
 
@@ -15,17 +18,17 @@ function ItemList(props) {
     <div style={{ display: 'flex' }}>
       {listItems.map((item) => {
         const archived = item.archived ?? false;
-        return <div className="card" style={{ width: '20%' }}>
+        return <Box component="section" sx={getMsi("listBox")}>
           <h4>{item.name}</h4>
           <p>{getLsi("listItemOwner")}: {item.ownerName}</p>
           {
             <p style={{ color: archived && 'orange' }}>{getLsi("listItemArchived") + ": " + (archived ? getLsi("yes") : getLsi("no"))}</p>
           }
           <p>{getLsi("listItemCount")}: {item.doneParts}/{item.totalParts}</p>
-          <Button className="" variant="primary" onClick={() => { navigate("/detail/" + item.id) }}>
+          <Button variant={getMsi("button")} onClick={() => { navigate("/detail/" + item.id) }}>
             {getLsi("listButtonDetail")}
           </Button>
-        </div>
+        </Box>
       })}
     </div>
   );

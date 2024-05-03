@@ -9,23 +9,26 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { UserProvider } from "./helpers/UserContext.js"
 import { LangProvider } from "./helpers/LangContext.js"
 import { ModeProvider } from "./helpers/ModeContext.js"
+import { SizeProvider } from "./helpers/SizeContext.js"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <LangProvider>
-        <ModeProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<App />} >
-                <Route path="" element={<List />} />
-                <Route path="detail/:id" element={<Detail />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </ModeProvider>
-      </LangProvider>
+      <SizeProvider>
+        <LangProvider>
+          <ModeProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<App />} >
+                  <Route path="" element={<List />} />
+                  <Route path="detail/:id" element={<Detail />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </ModeProvider>
+        </LangProvider>
+      </SizeProvider>
     </UserProvider>
   </React.StrictMode>
 );
