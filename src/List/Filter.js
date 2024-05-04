@@ -10,8 +10,21 @@ import Box from '@mui/material/Box';
 function Filter(props) {
   const { getLsi } = useLang()
   const { getMsi } = useMode()
+  const { width } = useSize()
   const { changeFilter, filterValue, applyFilter, createList } = props;
 
+  var size;
+  var override = null;
+  if (width >= 1400) {
+    size = 20
+  }
+  else if (width >= 600) {
+    size = 50
+  }
+  else {
+    size = 100
+    override = 0
+  }
 
   return (
     <Box component="section" sx={getMsi("listBox")}>
@@ -30,13 +43,17 @@ function Filter(props) {
           onChange={() => changeFilter({ showOnlyOwned: !filterValue.showOnlyOwned })}
         />
       </label>
-      <div className="buttonContrainer">
-        <Button className="filterButton" variant={getMsi("button")} onClick={applyFilter}>
-          {getLsi("listButtonFilter")}
-        </Button>
-        <Button className="createButton" variant={getMsi("button")} onClick={createList}>
-          {getLsi("listButtonCreate")}
-        </Button>
+      <div className="sizeContrainer">
+        <Box width={`${size}%`}>
+          <Button className="filterButton" variant={getMsi("button")} onClick={applyFilter}>
+            {getLsi("listButtonFilter")}
+          </Button>
+        </Box>
+        <Box width={`${size}%`} sx={{ marginLeft: `${override ?? (100 - 2 * size)}%` }}>
+          <Button className="filterButton" variant={getMsi("button")} onClick={createList}>
+            {getLsi("listButtonCreate")}
+          </Button>
+        </Box>
       </div>
     </Box>
   );
