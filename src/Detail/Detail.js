@@ -10,16 +10,18 @@ import { UserSelector, USERS } from "../helpers/user.js";
 import Call from '../helpers/BackendCaller.js';
 import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from '@mui/material';
-import {useUser} from "../helpers/UserContext.js"
-import {useLang} from "../helpers/LangContext.js"
+import { useUser } from "../helpers/UserContext.js"
+import { useLang } from "../helpers/LangContext.js"
 import { useMode } from "../helpers/ModeContext.js"
+import { Pie, PieChart } from 'recharts';
+import PieChartContainer from './PieChartContainer.js'
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
 
 function Detail() {
   const { getMsi } = useMode()
-  const { currentUser} = useUser()
+  const { currentUser } = useUser()
   const { getLsi } = useLang()
   let navigate = useNavigate();
   const [showDone, setShowDone] = useState(false);
@@ -217,6 +219,7 @@ function Detail() {
       return { isCurentUserMember: false, isCurrentUserOwner: false, nonOwnerUsers: [], memberList: [] }
     }
   }, [currentUser.id, detailData, detailData.data])
+
   return (
     //<UserProvider>
     //  <UserSelector/>
@@ -252,7 +255,7 @@ function Detail() {
           extraButtonsCreator={
             (item, editable, updateCallback) => {
               const value = item.done ? getLsi("detailItemCompleate") : getLsi("detailItemNotCompleate");
-              return !editable ? value : <Button  variant={getMsi("button")} disabled={buttonsDisabled} onClick={() => {
+              return !editable ? value : <Button variant={getMsi("button")} disabled={buttonsDisabled} onClick={() => {
                 updateCallback({ ...item, done: !item.done })
               }
               }>{value}</Button>
@@ -261,6 +264,9 @@ function Detail() {
           updateItemListCallback={updateItemList}
           itemCreatorFunction={() => { return { caption: "newItem", done: false } }}
         />
+        <Box component="section" sx={getMsi("listBox")}>
+          <PieChartContainer itemList={allItemList} />
+        </Box>
       </>}
 
       {detailData.state === "success" && !isCurentUserMember && <div className="noAcess">

@@ -2,7 +2,7 @@ const MockData = {
   "shoplist/list": {
     itemList: [
       { name: "list1", ownerId: 234, doneParts: 4, totalParts: 6, id: 1, archived: false },
-      { name: "list2", ownerId: 123, doneParts: 4, totalParts: 6, id: 1, archived: true }
+      { name: "list2", ownerId: 123, doneParts: 3, totalParts: 12, id: 1, archived: true }
     ]
   },
   "shoplist/create": {

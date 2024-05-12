@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import Call from '../helpers/BackendCaller.js';
 import { useUser } from "../helpers/UserContext.js"
 import { useMode } from "../helpers/ModeContext.js"
+import ChartContainer from './ChartContainer.js';
 //import { UserProvider, UserSelector, useUser } from "./user.js"// Variable overrides first
 
 
@@ -128,6 +129,8 @@ function List() {
         <ItemList
           listItems={itemList}
         />
+        <Box component="section" sx={getMsi("listBox")}>
+          <ChartContainer listItems={listData.itemList} /></Box>
         <CreateModal
           OpenCreateModalCallback={{ value: showCreateModal, setter: changeShowCreateModal }}
           createCallback={createCallback}
